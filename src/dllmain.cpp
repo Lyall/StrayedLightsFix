@@ -95,7 +95,7 @@ void __declspec(naked) AspectRatio_CC()
     __asm
     {
         or dword ptr[rbx + 0x30], 01           // Original code
-        mov[rbx + 0x2C], 0x3FE38BAC            // Original code
+        mov [rbx + 0x2C], 0x3FE38BAC            // Original code
         add rsp, 32                            // Original code
 
         cmp [iAspectFix], 1
@@ -119,7 +119,7 @@ void __declspec(naked) FOVCulling_CC()
     __asm
     {
         movss xmm1, [fOne]                      // r.StaticMeshLODDistanceScale | 1 = default, higher is worse
-        movss[rdx + 0x000002E8], xmm1           // Original code
+        movss [rdx + 0x000002E8], xmm1          // Original code
         xor r8d, r8d                            // Original code
         movsd xmm0, [rbp + 0x10]                // Original code
         jmp[FOVCullingReturnJMP]
