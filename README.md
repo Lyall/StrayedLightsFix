@@ -10,7 +10,7 @@ This is a fix to remove pillarboxing/letterboxing in Strayed Lights.
 
 ## Installation
 - Grab the latest release of StrayedLightsFix from [here.](https://github.com/Lyall/StrayedLightsFix/releases)
-- Extract the contents of the release zip in to the the game folder.<br />(e.g. "**C:\Games\StrayedLights**").
+- Extract the contents of the release zip in to the the game folder. (e.g. "**C:\Games\StrayedLights**").
 
 # Notes
 - Tested on the Epic Store version.
