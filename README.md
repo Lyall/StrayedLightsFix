@@ -15,11 +15,11 @@ This is a fix to remove pillarboxing/letterboxing in Strayed Lights.
 ## Testing Notes
 - Tested on the Epic Store version at 32:9 and 21:9.
 
-### Linux/Steam Deck
-- Make sure you set the Steam launch options to `WINEDLLOVERRIDES="winmm.dll=n,b" %command%`
-
 ## Configuration
 - See **StrayedLightsFix.ini** to adjust settings for the fix.
+
+### Linux/Steam Deck
+- **Linux/Steam Deck only** Make sure you set the Steam launch options to `WINEDLLOVERRIDES="winmm.dll=n,b" %command%`
 
 ## Known Issues
 Please report any issues you see.
