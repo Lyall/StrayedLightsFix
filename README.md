@@ -12,6 +12,9 @@ This is a fix to remove pillarboxing/letterboxing in Strayed Lights.
 - Grab the latest release of StrayedLightsFix from [here.](https://github.com/Lyall/StrayedLightsFix/releases)
 - Extract the contents of the release zip in to the the game folder.<br />(e.g. "**Games\StrayedLights**").
 
+# Notes
+- Tested on the Epic Store version.
+
 ### Linux/Steam Deck
 - Make sure you set the Steam launch options to `WINEDLLOVERRIDES="winmm.dll=n,b" %command%`
 
@@ -28,6 +31,7 @@ Please report any issues you see.
 | Disabled pillarboxing/letterboxing in gameplay. |
 
 ## Credits
+
 [Flawless Widescreen](https://www.flawlesswidescreen.org/) for the LOD fix.<br />
 [Ultimate ASI Loader](https://github.com/ThirteenAG/Ultimate-ASI-Loader) for ASI loading. <br />
 [inipp](https://github.com/mcmtroffaes/inipp) for ini reading. <br />
