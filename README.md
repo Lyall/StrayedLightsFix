@@ -19,7 +19,7 @@ This is a fix to remove pillarboxing/letterboxing in Strayed Lights.
 - See **StrayedLightsFix.ini** to adjust settings for the fix.
 
 ### Linux/Steam Deck
-- **Linux/Steam Deck only** Make sure you set the Steam launch options to `WINEDLLOVERRIDES="winmm.dll=n,b" %command%`
+- __**Linux/Steam Deck only**__: Make sure you set the Steam launch options to `WINEDLLOVERRIDES="winmm.dll=n,b" %command%`
 
 ## Known Issues
 Please report any issues you see.
