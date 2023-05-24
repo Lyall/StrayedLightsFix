@@ -23,7 +23,7 @@ Please report any issues you see.
 
 ## Screenshots
 
-| ![ezgif-3-ffd6bc6ca3](https://user-images.githubusercontent.com/695941/220556346-b40c2d23-7c33-4545-abc5-32b8186507fb.gif) |
+| ![ezgif-4-3258b12cf4](https://github.com/Lyall/StrayedLightsFix/assets/695941/42f1ab06-335b-460c-910a-1559cee3454c) |
 |:--:|
 | Disabled pillarboxing/letterboxing in gameplay. |
 
