@@ -31,7 +31,7 @@ Please report any issues you see.
 | Disabled pillarboxing/letterboxing in gameplay. |
 
 ## Credits
-
+[ImaHappy](https://www.twitch.tv/imahappy) for providing a copy of the game to create this fix.<br />
 [Flawless Widescreen](https://www.flawlesswidescreen.org/) for the LOD fix.<br />
 [Ultimate ASI Loader](https://github.com/ThirteenAG/Ultimate-ASI-Loader) for ASI loading. <br />
 [inipp](https://github.com/mcmtroffaes/inipp) for ini reading. <br />
