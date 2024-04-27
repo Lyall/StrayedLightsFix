@@ -21,6 +21,7 @@ This is a fix to remove pillarboxing/letterboxing in Strayed Lights.
 
 ## Known Issues
 Please report any issues you see.
+This list will contain bugs which may or may not be fixed.
 
 ## Screenshots
 
