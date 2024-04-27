@@ -179,7 +179,7 @@ void AspectFOV()
             AspectRatioMidHook = safetyhook::create_mid(AspectRatioScanResult ,
                 [](SafetyHookContext& ctx)
                 {
-                    //ctx.rax = *(uint32_t*)&fAspectRatio;
+                    ctx.rax = *(uint32_t*)&fAspectRatio;
                 });
 
             static SafetyHookMid ExtraAspectRatioMidHook{};
