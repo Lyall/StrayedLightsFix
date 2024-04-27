@@ -21,9 +21,9 @@ filesystem::path sThisModulePath;
 std::pair DesktopDimensions = { 0,0 };
 
 // Ini Variables
-
 bool bAspectFix;
 bool bFOVFix;
+float fAdditionalFOV;
 
 // Aspect ratio + HUD stuff
 float fPi = (float)3.141592653;
@@ -111,10 +111,16 @@ void ReadConfig()
     // Read ini file
     inipp::get_value(ini.sections["Fix Aspect Ratio"], "Enabled", bAspectFix);
     inipp::get_value(ini.sections["Fix FOV"], "Enabled", bFOVFix);
+    inipp::get_value(ini.sections["Fix FOV"], "AdditionalFOV", fAdditionalFOV);
 
     // Log config parse
     spdlog::info("Config Parse: bAspectFix: {}", bAspectFix);
     spdlog::info("Config Parse: bFOVFix: {}", bFOVFix);
+    if (fAdditionalFOV < 0.0f || fAdditionalFOV > 180.0f)
+    {
+        fAdditionalFOV = std::clamp(fAdditionalFOV, 0.0f, 180.0f);
+        spdlog::info("Config Parse: fAdditionalFOV value invalid, clamped to {}", fAdditionalFOV);
+    }
     spdlog::info("----------");
 
     // Get desktop resolution
@@ -126,14 +132,14 @@ void AspectFOV()
     uint8_t* CurrResolutionScanResult = Memory::PatternScan(baseModule, "33 ?? B9 ?? ?? ?? ?? 45 ?? ?? 48 ?? ?? 4A ?? ?? ?? 48 ?? ?? 8B ??");
     if (CurrResolutionScanResult)
     {
-        spdlog::info("Aspect Ratio: Address is {:s}+{:x}", sExeName.c_str(), (uintptr_t)CurrResolutionScanResult - (uintptr_t)baseModule);
+        spdlog::info("Current Resolution: Address is {:s}+{:x}", sExeName.c_str(), (uintptr_t)CurrResolutionScanResult - (uintptr_t)baseModule);
 
         static SafetyHookMid CurrResolutionMidHook{};
         CurrResolutionMidHook = safetyhook::create_mid(CurrResolutionScanResult + 0x7,
             [](SafetyHookContext& ctx)
             {
-                iResX = ctx.r15;
-                iResY = ctx.r12;
+                iResX = (int)ctx.r15;
+                iResY = (int)ctx.r9;
 
                 fAspectRatio = (float)iResX / iResY;
                 fAspectMultiplier = fAspectRatio / fNativeAspect;
@@ -173,7 +179,7 @@ void AspectFOV()
             AspectRatioMidHook = safetyhook::create_mid(AspectRatioScanResult ,
                 [](SafetyHookContext& ctx)
                 {
-                    ctx.rax = *(uint32_t*)&fAspectRatio;
+                    //ctx.rax = *(uint32_t*)&fAspectRatio;
                 });
 
             static SafetyHookMid ExtraAspectRatioMidHook{};
@@ -195,7 +201,7 @@ void AspectFOV()
     if (bFOVFix)
     {
         // FOV
-        uint8_t* FOVScanResult = Memory::PatternScan(baseModule, "F3 0F ?? ?? ?? ?? ?? ?? F3 0F ?? ?? ?? 8B ?? ?? ?? ?? ?? 89 ?? ?? 0F ?? ?? ?? ?? ?? ?? 33 ?? ?? 83 ?? ??");
+        uint8_t* FOVScanResult = Memory::PatternScan(baseModule, "F3 0F ?? ?? ?? ?? ?? 00 EB ?? F3 0F ?? ?? ?? ?? ?? 00 F3 0F ?? ?? ?? 8B ?? ?? ?? ?? 00");
         uint8_t* FOVCullingScanResult = Memory::PatternScan(baseModule, "83 ?? ?? ?? ?? ?? 00 49 ?? ?? ?? 74 ?? 48 ?? ?? ?? ?? ?? 00");
         if (FOVScanResult && FOVCullingScanResult)
         {
@@ -203,17 +209,18 @@ void AspectFOV()
             spdlog::info("FOV Culling: Address is {:s}+{:x}", sExeName.c_str(), (uintptr_t)FOVCullingScanResult - (uintptr_t)baseModule);
 
             static SafetyHookMid FOVMidHook{};
-            FOVMidHook = safetyhook::create_mid(FOVScanResult + 0x8,
+            FOVMidHook = safetyhook::create_mid(FOVScanResult + 0x12,
                 [](SafetyHookContext& ctx)
                 {
                     if (fAspectRatio > fNativeAspect)
                     {
                         ctx.xmm0.f32[0] = atanf(tanf(ctx.xmm0.f32[0] * (fPi / 360)) / fNativeAspect * fAspectRatio) * (360 / fPi);
                     }
+                    ctx.xmm0.f32[0] += fAdditionalFOV;
                 });
 
             static SafetyHookMid FOVCullingMidHook{};
-            FOVCullingMidHook = safetyhook::create_mid(FOVCullingScanResult + 0x46,
+            FOVCullingMidHook = safetyhook::create_mid(FOVCullingScanResult + 0x49,
                 [](SafetyHookContext& ctx)
                 {
                     if (fAspectRatio > fNativeAspect)
