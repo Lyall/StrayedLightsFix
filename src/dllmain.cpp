@@ -12,7 +12,7 @@ HMODULE thisModule;
 inipp::Ini<char> ini;
 std::shared_ptr<spdlog::logger> logger;
 string sFixName = "StrayedLightsFix";
-string sFixVer = "1.0.0";
+string sFixVer = "1.0.1";
 string sLogFile = "StrayedLightsFix.log";
 string sConfigFile = "StrayedLightsFix.ini";
 string sExeName;
@@ -159,14 +159,15 @@ void AspectFOV()
         spdlog::error("Current Resolution: Pattern scan failed.");
     }
 
-
     if (bAspectFix)
     {
         // Aspect Ratio
         uint8_t* AspectRatioScanResult = Memory::PatternScan(baseModule, "89 ?? ?? 0F ?? ?? ?? ?? ?? 00 33 ?? ?? 83 ?? 01");
-        if (AspectRatioScanResult)
+        uint8_t* ExtraAspectRatioScanResult = Memory::PatternScan(baseModule, "83 ?? ?? 01 C7 ?? ?? ?? ?? E3 3F 48 ?? ?? ");
+        if (AspectRatioScanResult && ExtraAspectRatioScanResult)
         {
-            spdlog::info("Aspect Ratio: Address is {:s}+{:x}", sExeName.c_str(), (uintptr_t)AspectRatioScanResult - (uintptr_t)baseModule);
+            spdlog::info("Aspect Ratio 1: Address is {:s}+{:x}", sExeName.c_str(), (uintptr_t)AspectRatioScanResult - (uintptr_t)baseModule);
+            spdlog::info("Aspect Ratio 2: Address is {:s}+{:x}", sExeName.c_str(), (uintptr_t)ExtraAspectRatioScanResult - (uintptr_t)baseModule);
 
             static SafetyHookMid AspectRatioMidHook{};
             AspectRatioMidHook = safetyhook::create_mid(AspectRatioScanResult ,
@@ -174,8 +175,18 @@ void AspectFOV()
                 {
                     ctx.rax = *(uint32_t*)&fAspectRatio;
                 });
+
+            static SafetyHookMid ExtraAspectRatioMidHook{};
+            ExtraAspectRatioMidHook = safetyhook::create_mid(ExtraAspectRatioScanResult + 0xB,
+                [](SafetyHookContext& ctx)
+                {
+                    if (ctx.rbx + 0x2C)
+                    {
+                        *reinterpret_cast<float*>(ctx.rbx + 0x2C) = fAspectRatio;
+                    }
+                });
         }
-        else if (!AspectRatioScanResult)
+        else if (!AspectRatioScanResult || !ExtraAspectRatioScanResult)
         {
             spdlog::error("Aspect Ratio: Pattern scan failed.");
         }
