@@ -44,10 +44,10 @@ jobs:
 
     - name: Prepare files
       run: |
-        cp ${{ github.event.repository.name }}.asi .\zip\ZingangGame\Binaries\Win64\
-        cp ${{ github.event.repository.name }}.ini .\zip\ZingangGame\Binaries\Win64\
-        cp dinput8.dll .\zip\ZingangGame\Binaries\Win64\dsound.dll
-        cp UltimateASILoader_LICENSE.md .\zip\ZingangGame\Binaries\Win64\
+        cp ${{ github.event.repository.name }}.asi .\zip\Aether\Binaries\Win64\
+        cp ${{ github.event.repository.name }}.ini .\zip\Aether\Binaries\Win64\
+        cp dinput8.dll .\zip\Aether\Binaries\Win64\winmm.dll
+        cp UltimateASILoader_LICENSE.md .\zip\Aether\Binaries\Win64\
         New-Item -Path ".\zip\EXTRACT_TO_GAME_FOLDER" -ItemType File
         
     - name: Create Release Zip
